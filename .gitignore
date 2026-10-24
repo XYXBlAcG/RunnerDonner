@@ -13,3 +13,5 @@ Backend/build.log
 .tmp/
 **/__pycache__/
 Backend/*.spec
+/test2-perturbed.gpx
+/gpx-variants/

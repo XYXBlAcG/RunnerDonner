@@ -10,6 +10,8 @@ metadata = plistlib.loads((app / 'Contents/Info.plist').read_bytes())
 assert (app / 'Contents/Resources' / (metadata['CFBundleIconFile'] + '.icns')).is_file()
 assert (app / 'Contents/Resources/Licenses/eviltransform-LICENSE.txt').is_file()
 helper = app / 'Contents/Resources/DeviceBridge/DeviceBridge'
+for binary in (app / 'Contents/MacOS' / metadata['CFBundleExecutable'], helper):
+    subprocess.run(['lipo', str(binary), '-verify_arch', 'arm64'], check=True)
 frames = [dict(id='state', command='status'), dict(id='close', command='shutdown')]
 result = subprocess.run([str(helper)], input=''.join(json.dumps(frame) + '\n' for frame in frames), capture_output=True, text=True, timeout=20, check=True)
 responses = [json.loads(line) for line in result.stdout.splitlines()]

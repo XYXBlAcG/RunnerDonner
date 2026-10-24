@@ -26,8 +26,8 @@ import CoreLocation
         let offset = origin.distance(to: Coordinate(latitude: projected.mapKit.latitude, longitude: projected.mapKit.longitude))
         precondition(offset > 300 && offset < 800)
         precondition(MapCoordinate(mapKit: projected.mapKit).wgs84.distance(to: origin) < 0.001)
-        for name in try FileManager.default.contentsOfDirectory(atPath: "gpx-variants") where name.hasSuffix(".gpx") {
-            let url = URL(fileURLWithPath: "gpx-variants").appendingPathComponent(name)
+        for name in try FileManager.default.contentsOfDirectory(atPath: "LocationController/tests/fixtures") where name.hasSuffix(".gpx") {
+            let url = URL(fileURLWithPath: "LocationController/tests/fixtures").appendingPathComponent(name)
             let bytes = try Data(contentsOf: url)
             let document = try GPXDocument(data: bytes)
             let model = GPXEditorModel(document: document)

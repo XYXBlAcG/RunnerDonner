@@ -12,6 +12,8 @@
 - [GPX 定向验证入口](../Scripts/check-gpx.zsh)：文档往返、编辑历史、扰动和会话协议；不连接设备。
 - [应用构建入口](../Scripts/build.zsh)。
 - [打包入口](../Scripts/package.py)。
+- [打包集成测试](../Scripts/tests/test_package.py)：验证不含本地轨迹的干净源码导出。
+- [ARM64 自动发布](../.github/workflows/release.yml)：触发条件、运行环境及 Release 流程。
 - [交付包检查](../Scripts/check-package.py)：不连接设备的签名与协议检查。
 - [第三方依赖](../第三方项目说明.md)。
 

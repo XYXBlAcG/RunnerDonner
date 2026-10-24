@@ -60,12 +60,12 @@ import Foundation
         do { _ = try GPXDocument().encoded(); preconditionFailure("Empty saved") } catch {}
         do { _ = try GPXDocument(data: Data("<gpx><trk><trkseg><trkpt lat='nan' lon='0'/></trkseg></trk></gpx>".utf8)); preconditionFailure("Invalid parsed") } catch {}
         do { _ = try original.perturbed(radius: .infinity, seed: 1); preconditionFailure("Invalid radius") } catch {}
-        for name in try FileManager.default.contentsOfDirectory(atPath: "gpx-variants") where name.hasSuffix(".gpx") {
-            let url = URL(fileURLWithPath: "gpx-variants").appendingPathComponent(name)
+        for name in try FileManager.default.contentsOfDirectory(atPath: "LocationController/tests/fixtures") where name.hasSuffix(".gpx") {
+            let url = URL(fileURLWithPath: "LocationController/tests/fixtures").appendingPathComponent(name)
             let doc = try GPXDocument(data: Data(contentsOf: url))
             let shuffled = try doc.perturbed(radius: 1, seed: 23)
             let roundtrip = try GPXDocument(data: shuffled.encoded())
-            precondition(roundtrip.vertices.count == 512 && roundtrip.track.meters > 2400)
+            precondition(roundtrip.vertices.count == 5 && roundtrip.track.meters > 2400)
             precondition(roundtrip.track.points.first == roundtrip.track.points.last)
         }
         let boundsXML = try XMLDocument(data: saved)
@@ -102,6 +102,6 @@ import Foundation
         try routeSaved.write(to: temp, options: .atomic)
         let disk = try GPXDocument(data: Data(contentsOf: temp))
         precondition(disk.track.points == routeRead.track.points)
-        print("PASS: GPX XML preservation, edits, history, perturbation and real file roundtrips")
+        print("PASS: GPX XML preservation, edits, history, perturbation and fixture file roundtrips")
     }
 }

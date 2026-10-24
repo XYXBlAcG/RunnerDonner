@@ -12,7 +12,7 @@ with tempfile.TemporaryDirectory(prefix='runnerdonner-delivery-') as temporary:
     delivery = temporary / 'RunnerDonner'
     delivery.mkdir()
     shutil.copytree(root / 'dist/轨迹控制面板.app', delivery / '轨迹控制面板.app', symlinks=True)
-    for name in ('LocationController', 'Scripts', 'docs', 'gpx-variants'):
+    for name in ('LocationController', 'Scripts', 'docs', '.github'):
         shutil.copytree(root / name, delivery / name, symlinks=True, ignore=shutil.ignore_patterns('__pycache__', '.DS_Store'))
     backend = delivery / 'Backend'
     backend.mkdir()
@@ -21,7 +21,7 @@ with tempfile.TemporaryDirectory(prefix='runnerdonner-delivery-') as temporary:
             shutil.copy2(source, backend / source.name)
     for name in ('tests', 'licenses'):
         shutil.copytree(root / 'Backend' / name, backend / name, ignore=shutil.ignore_patterns('__pycache__'))
-    for name in ('使用说明.md', '第三方项目说明.md'):
+    for name in ('README.md', '使用说明.md', '第三方项目说明.md'):
         shutil.copy2(root / name, delivery / name)
     archive_path = temporary / 'RunnerDonner.zip'
     with zipfile.ZipFile(archive_path, 'w', zipfile.ZIP_DEFLATED) as archive:
@@ -38,7 +38,7 @@ with tempfile.TemporaryDirectory(prefix='runnerdonner-delivery-') as temporary:
     with zipfile.ZipFile(archive_path) as archive:
         assert archive.testzip() is None
         assert 'RunnerDonner/docs/验收.md' in archive.namelist()
-        assert not any('/.venv/' in name or '/.tmp/' in name for name in archive.namelist())
+        assert not any('/.venv/' in name or '/.tmp/' in name or '/gpx-variants/' in name or name.endswith('/test2-perturbed.gpx') for name in archive.namelist())
     unpacked = temporary / 'unpacked'
     subprocess.run(['ditto', '-x', '-k', str(archive_path), str(unpacked)], check=True)
     subprocess.run([sys.executable, str(root / 'Scripts/check-package.py'), str(unpacked / 'RunnerDonner/轨迹控制面板.app')], check=True)

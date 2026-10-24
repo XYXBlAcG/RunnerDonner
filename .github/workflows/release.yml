@@ -1,0 +1,61 @@
+name: Release macOS ARM64
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.ref == 'refs/heads/master'
+    runs-on: macos-15
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    env:
+      MACOSX_DEPLOYMENT_TARGET: '13.0'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+        with:
+          python-version: '3.11'
+          architecture: arm64
+          cache: pip
+          cache-dependency-path: Backend/requirements-lock.txt
+      - name: Prepare ARM64 environment
+        run: |
+          test "$(uname -m)" = arm64
+          RUNNER_PYTHON="$(command -v python)" zsh Backend/setup.zsh
+      - name: Check GPX and protocol
+        run: zsh Scripts/check-gpx.zsh
+      - name: Build application
+        run: zsh Scripts/build.zsh
+      - name: Check clean source packaging
+        run: Backend/.venv/bin/python Scripts/tests/test_package.py
+      - name: Package application
+        run: |
+          Backend/.venv/bin/python Scripts/package.py
+          mv RunnerDonner.zip RunnerDonner-macos-arm64.zip
+          shasum -a 256 RunnerDonner-macos-arm64.zip > SHA256SUMS
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="build-${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}"
+          mkdir -p .tmp
+          printf 'macOS Apple Silicon (ARM64) 应用包。\n\n[使用与构建文档](%s/%s/blob/%s/docs/README.md)\n' \
+            "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_SHA" > .tmp/release-notes.md
+          gh release create "$tag" RunnerDonner-macos-arm64.zip SHA256SUMS \
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+            --title "RunnerDonner ARM64 ($tag)" --notes-file .tmp/release-notes.md --latest
+      - name: Show build diagnostics
+        if: failure()
+        run: |
+          if test -f Backend/build.log; then cat Backend/build.log; fi

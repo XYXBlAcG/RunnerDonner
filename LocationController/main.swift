@@ -93,7 +93,6 @@ enum PlaybackAction { case start, pause, resume, restart, clear }
     }
     func choose() {
         let panel = NSOpenPanel(); panel.allowedContentTypes = [UTType(filenameExtension: "gpx") ?? .xml]; panel.allowsMultipleSelection=false
-        panel.directoryURL = Bundle.main.bundleURL.deletingLastPathComponent().appendingPathComponent("gpx-variants")
         guard panel.runModal() == .OK, let url=panel.url else { return }
         do { try load(url, document: GPXDocument(data: Data(contentsOf: url))) }
         catch {

@@ -9,6 +9,6 @@ swiftc -parse-as-library -target arm64-apple-macos13.0 -module-cache-path /tmp/r
 "$check_root/editor-check"
 Backend/.venv/bin/python Backend/tests/export_protocol_fixture.py "$check_root/session.json"
 swiftc -parse-as-library -target arm64-apple-macos13.0 -module-cache-path /tmp/runnerdonner-swift-cache "${sources[@]/#/LocationController/}" LocationController/tests/device-protocol-check.swift -o "$check_root/protocol-check"
-"$check_root/protocol-check" "$check_root/session.json" gpx-variants
+"$check_root/protocol-check" "$check_root/session.json" LocationController/tests/fixtures
 swiftc -parse-as-library -target arm64-apple-macos13.0 -module-cache-path /tmp/runnerdonner-swift-cache "${sources[@]/#/LocationController/}" LocationController/GPXEditorModel.swift LocationController/Vendor/eviltransform/LocationTransform.swift LocationController/MapCoordinate.swift LocationController/tests/map-coordinate-check.swift -o "$check_root/map-check"
 "$check_root/map-check"

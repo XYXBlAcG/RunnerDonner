@@ -17,10 +17,10 @@ import Foundation
         precondition(cleared.state == .ready && cleared.position == nil && cleared.total == 0)
         let directory = URL(fileURLWithPath: CommandLine.arguments[2])
         let tracks = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil).filter { $0.pathExtension == "gpx" }
-        precondition(tracks.count == 5)
+        precondition(tracks.count == 1)
         for file in tracks {
             let track = try GPXDocument(data: Data(contentsOf: file)).track
-            precondition(track.points.count == 512 && track.meters > 2400)
+            precondition(track.points.count == 5 && track.meters > 2400)
             precondition(track.points.first == track.points.last)
         }
         print("PASS: native decoding of real session snapshots and GPX origin parsing")

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1" creator="RunnerDonner tests">
+  <metadata><name>Synthetic test loop</name></metadata>
+  <trk>
+    <name>Synthetic test loop</name>
+    <trkseg>
+      <trkpt lat="32" lon="118"><ele>10</ele></trkpt>
+      <trkpt lat="32.009" lon="118"><ele>11</ele></trkpt>
+      <trkpt lat="32.009" lon="118.009"><ele>12</ele></trkpt>
+      <trkpt lat="32" lon="118.009"><ele>11</ele></trkpt>
+      <trkpt lat="32" lon="118"><ele>10</ele></trkpt>
+    </trkseg>
+  </trk>
+</gpx>
