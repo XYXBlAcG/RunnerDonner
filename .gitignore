@@ -1,0 +1,15 @@
+.DS_Store
+Backend/.venv/
+Backend/__pycache__/
+Backend/wheels/
+*.zip
+*.app/
+backups/
+Backend/build/
+Backend/dist/
+Backend/.pyinstaller-cache/
+Backend/build.log
+
+.tmp/
+**/__pycache__/
+Backend/*.spec
